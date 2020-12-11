@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2020 the original author or authors.
+ * Copyright 2019-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,8 @@
 package org.docksidestage.bizfw.basic.buyticket;
 
 /**
- * @author jflute
+ * @author yama
+ *
  */
 public class TicketBooth {
 
@@ -24,7 +25,6 @@ public class TicketBooth {
     //                                                                          Definition
     //                                                                          ==========
     private static final int MAX_QUANTITY = 10;
-    private static final int ONE_DAY_PRICE = 7400; // when 2019/06/15
 
     // ===================================================================================
     //                                                                           Attribute
@@ -41,19 +41,49 @@ public class TicketBooth {
     // ===================================================================================
     //                                                                          Buy Ticket
     //                                                                          ==========
-    public void buyOneDayPassport(int handedMoney) {
-        if (quantity <= 0) {
+
+    //ウキウキ1日パスポート
+    public OnedayTicket buyOneDayPassport(int handedMoney) {
+        OnedayTicket ticket = new OnedayTicket();
+
+        doBuyPassport(handedMoney, ticket.getPrice());
+
+        return ticket;
+    }
+
+    //2日パスポート
+    public TicketBuyResult buyTwoDayPassport(int handedMoney) {
+        DaysTicket ticket = new DaysTicket(TicketType.TWODAY);
+
+        int change = doBuyPassport(handedMoney, ticket.getPrice());
+
+        return new TicketBuyResult(ticket, change);
+    }
+
+    //4日パスポート
+    public TicketBuyResult buyFourDayPassport(int handedMoney) {
+        DaysTicket ticket = new DaysTicket(TicketType.FOURDAY);
+
+        int change = doBuyPassport(handedMoney, ticket.getPrice());
+
+        return new TicketBuyResult(ticket, change);
+    }
+
+    //　 各日パスポート共通購入処理　金不足や品切れは例外なげるよ～
+    private int doBuyPassport(int handedMoney, int passportPrice) {
+        if (quantity < 0) {
             throw new TicketSoldOutException("Sold out");
         }
-        --quantity;
-        if (handedMoney < ONE_DAY_PRICE) {
+        if (handedMoney < passportPrice) {
             throw new TicketShortMoneyException("Short money: " + handedMoney);
         }
+        --quantity;
         if (salesProceeds != null) {
-            salesProceeds = salesProceeds + handedMoney;
+            salesProceeds = salesProceeds + passportPrice;
         } else {
-            salesProceeds = handedMoney;
+            salesProceeds = passportPrice;
         }
+        return handedMoney - passportPrice;
     }
 
     public static class TicketSoldOutException extends RuntimeException {
