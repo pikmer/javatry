@@ -6,7 +6,7 @@ package org.docksidestage.bizfw.basic.buyticket;
  */
 public class OnedayTicket implements Ticket {
 
-    private final TicketProperty property = TicketProperty.getPropertyForType(TicketType.ONEDAY);
+    private final TicketType type = TicketType.ONEDAY;
     private boolean alreadyIn = false; //既に入場しているか
 
     // ===================================================================================
@@ -20,7 +20,7 @@ public class OnedayTicket implements Ticket {
     //                                                                             =======
     public void doInPark() {
         if (alreadyIn) {
-            throw new IllegalStateException("Already in park by this ticket: displayedPrice=" + property.getPrice());
+            throw new IllegalStateException("Already in park by this ticket: displayedPrice=" + type.getPrice());
         }
         alreadyIn = true;
     }
@@ -29,15 +29,15 @@ public class OnedayTicket implements Ticket {
     //                                                                            Accessor
     //                                                                            ========
     public int getPrice() {
-        return property.getPrice();
+        return type.getPrice();
     }
 
     public String getDisplayPrice() {
-        return property.getPrice() + "円";
+        return type.getPrice() + "円";
     }
 
     public TicketType getType() {
-        return property.getType();
+        return type;
     }
 
     public boolean isAlreadyIn() {

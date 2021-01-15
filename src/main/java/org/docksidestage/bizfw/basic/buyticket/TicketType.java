@@ -5,9 +5,9 @@ package org.docksidestage.bizfw.basic.buyticket;
  *
  */
 public enum TicketType {
-    ONEDAY(1, 7400), //通常1日
-    TWODAY(2, 13200), //通常2日
-    FOURDAY(4, 22400), //通常4日
+    ONEDAY(7400, 1), //通常1日
+    TWODAY(13200, 2), //通常2日
+    FOURDAY(22400, 4), //通常4日
     ;
 
     private final int price;

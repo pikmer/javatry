@@ -6,15 +6,15 @@ package org.docksidestage.bizfw.basic.buyticket;
  */
 public class DaysTicket implements Ticket {
 
-    private final TicketProperty property;
+    private final TicketType type;
     private int remainingDays = 0; //チケットの残入場日数
 
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
     public DaysTicket(TicketType type) {
-        property = TicketProperty.getPropertyForType(type);
-        remainingDays = property.getDays();
+        this.type = type;
+        this.remainingDays = type.getDays();
     }
 
     // ===================================================================================
@@ -31,14 +31,14 @@ public class DaysTicket implements Ticket {
     //                                                                            Accessor
     //                                                                            ========
     public int getPrice() {
-        return property.getPrice();
+        return type.getPrice();
     }
 
     public String getDisplayPrice() {
-        return property.getPrice() + "円";
+        return type.getPrice() + "円";
     }
 
     public TicketType getType() {
-        return property.getType();
+        return type;
     }
 }
