@@ -8,6 +8,7 @@ public class DaysTicket implements Ticket {
 
     private final TicketType type;
     private int remainingDays = 0; //チケットの残入場日数
+    private boolean alreadyIn = false; //既に入場しているか:1日でも入場したらとりあえずtrue
 
     // ===================================================================================
     //                                                                         Constructor
@@ -25,6 +26,9 @@ public class DaysTicket implements Ticket {
             throw new IllegalStateException("remaining days is zero!");
         }
         remainingDays--;
+        //こういうときってどっちの書き方のほうが良いんでしょうか？
+        alreadyIn = true;
+        //if(!alreadyIn) alreadyIn = true;
     }
 
     // ===================================================================================
@@ -40,5 +44,9 @@ public class DaysTicket implements Ticket {
 
     public TicketType getType() {
         return type;
+    }
+
+    public boolean isAlreadyIn() {
+        return alreadyIn;
     }
 }

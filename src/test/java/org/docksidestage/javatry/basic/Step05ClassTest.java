@@ -15,11 +15,11 @@
  */
 package org.docksidestage.javatry.basic;
 
-import org.docksidestage.bizfw.basic.buyticket.OnedayTicket;
 import org.docksidestage.bizfw.basic.buyticket.Ticket;
 import org.docksidestage.bizfw.basic.buyticket.TicketBooth;
 import org.docksidestage.bizfw.basic.buyticket.TicketBooth.TicketShortMoneyException;
 import org.docksidestage.bizfw.basic.buyticket.TicketBuyResult;
+import org.docksidestage.bizfw.basic.buyticket.TicketType;
 import org.docksidestage.unit.PlainTestCase;
 
 /**
@@ -40,7 +40,7 @@ public class Step05ClassTest extends PlainTestCase {
      */
     public void test_class_howToUse_basic() {
         TicketBooth booth = new TicketBooth();
-        booth.buyOneDayPassport(7400);
+        booth.buyPassport(7400, TicketType.ONEDAY);
         int sea = booth.getQuantity();
         log(sea); // your answer? => 
     }
@@ -48,7 +48,7 @@ public class Step05ClassTest extends PlainTestCase {
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
     public void test_class_howToUse_overpay() {
         TicketBooth booth = new TicketBooth();
-        booth.buyOneDayPassport(10000);
+        booth.buyPassport(10000, TicketType.ONEDAY);
         Integer sea = booth.getSalesProceeds();
         log(sea); // your answer? => 
     }
@@ -70,7 +70,7 @@ public class Step05ClassTest extends PlainTestCase {
         TicketBooth booth = new TicketBooth();
         int handedMoney = 7399;
         try {
-            booth.buyOneDayPassport(handedMoney);
+            booth.buyPassport(handedMoney, TicketType.ONEDAY);
             fail("always exception but none");
         } catch (TicketShortMoneyException continued) {
             log("Failed to buy one-day passport: money=" + handedMoney, continued);
@@ -96,7 +96,7 @@ public class Step05ClassTest extends PlainTestCase {
      */
     public void test_class_letsFix_salesProceedsIncrease() {
         TicketBooth booth = new TicketBooth();
-        booth.buyOneDayPassport(10000);
+        booth.buyPassport(10000, TicketType.ONEDAY);
         Integer sea = booth.getSalesProceeds();
         log(sea); // should be same as one-day price, visual check here
     }
@@ -122,7 +122,7 @@ public class Step05ClassTest extends PlainTestCase {
      */
     public void test_class_letsFix_refactor_recycle() {
         TicketBooth booth = new TicketBooth();
-        booth.buyOneDayPassport(10000);
+        booth.buyPassport(10000, TicketType.ONEDAY);
         log(booth.getQuantity(), booth.getSalesProceeds()); // should be same as before-fix
     }
 
@@ -136,7 +136,7 @@ public class Step05ClassTest extends PlainTestCase {
     public void test_class_moreFix_return_ticket() {
         // comment out after modifying the method
         TicketBooth booth = new TicketBooth();
-        OnedayTicket oneDayPassport = booth.buyOneDayPassport(10000);
+        Ticket oneDayPassport = booth.buyPassport(10000, TicketType.ONEDAY).getTicket();
         log(oneDayPassport.getPrice()); // should be same as one-day price
         log(oneDayPassport.isAlreadyIn()); // should be false
         oneDayPassport.doInPark();
@@ -151,7 +151,7 @@ public class Step05ClassTest extends PlainTestCase {
         // comment out after modifying the method
         TicketBooth booth = new TicketBooth();
         int handedMoney = 20000;
-        TicketBuyResult twoDayPassportResult = booth.buyTwoDayPassport(handedMoney);
+        TicketBuyResult twoDayPassportResult = booth.buyPassport(handedMoney, TicketType.TWODAY);
         Ticket twoDayPassport = twoDayPassportResult.getTicket();
         int change = twoDayPassportResult.getChange();
         log(twoDayPassport.getPrice() + change); // should be same as money
@@ -163,8 +163,8 @@ public class Step05ClassTest extends PlainTestCase {
      */
     public void test_class_moreFix_type() {
         TicketBooth booth = new TicketBooth();
-        Ticket oneDayPassport = booth.buyOneDayPassport(20000);
-        TicketBuyResult twoDayPassportResult = booth.buyTwoDayPassport(20000);
+        Ticket oneDayPassport = booth.buyPassport(20000, TicketType.ONEDAY).getTicket();
+        TicketBuyResult twoDayPassportResult = booth.buyPassport(20000, TicketType.TWODAY);
         log(oneDayPassport.getType(), twoDayPassportResult.getTicket().getType());
         // your confirmation code here
     }
@@ -190,7 +190,7 @@ public class Step05ClassTest extends PlainTestCase {
      */
     public void test_class_moreFix_useInterface() {
         TicketBooth booth = new TicketBooth();
-        TicketBuyResult twoDayPassportResult = booth.buyTwoDayPassport(20000);
+        TicketBuyResult twoDayPassportResult = booth.buyPassport(20000, TicketType.TWODAY);
         Ticket twoDayPassport = twoDayPassportResult.getTicket();
         twoDayPassport.doInPark();
         twoDayPassport.doInPark();
@@ -202,7 +202,7 @@ public class Step05ClassTest extends PlainTestCase {
      */
     public void test_class_moreFix_wonder() {
         TicketBooth booth = new TicketBooth();
-        TicketBuyResult fourDayPassportResult = booth.buyFourDayPassport(40000);
+        TicketBuyResult fourDayPassportResult = booth.buyPassport(20000, TicketType.FOURDAY);
         Ticket fourDayPassport = fourDayPassportResult.getTicket();
         fourDayPassport.doInPark();
         fourDayPassport.doInPark();

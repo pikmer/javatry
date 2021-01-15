@@ -42,48 +42,28 @@ public class TicketBooth {
     //                                                                          Buy Ticket
     //                                                                          ==========
 
-    //ウキウキ1日パスポート
-    public OnedayTicket buyOneDayPassport(int handedMoney) {
-        OnedayTicket ticket = new OnedayTicket();
-
-        doBuyPassport(handedMoney, ticket.getPrice());
-
-        return ticket;
-    }
-
-    //2日パスポート
-    public TicketBuyResult buyTwoDayPassport(int handedMoney) {
-        DaysTicket ticket = new DaysTicket(TicketType.TWODAY);
-
-        int change = doBuyPassport(handedMoney, ticket.getPrice());
-
-        return new TicketBuyResult(ticket, change);
-    }
-
-    //4日パスポート
-    public TicketBuyResult buyFourDayPassport(int handedMoney) {
-        DaysTicket ticket = new DaysTicket(TicketType.FOURDAY);
-
-        int change = doBuyPassport(handedMoney, ticket.getPrice());
-
-        return new TicketBuyResult(ticket, change);
-    }
-
-    //　 各日パスポート共通購入処理　金不足や品切れは例外なげるよ～
-    private int doBuyPassport(int handedMoney, int passportPrice) {
+    //　 パスポート共通購入処理　金不足や品切れは例外なげるよ～
+    public TicketBuyResult buyPassport(int handedMoney, TicketType type) {
         if (quantity < 0) {
             throw new TicketSoldOutException("Sold out");
         }
-        if (handedMoney < passportPrice) {
+        if (handedMoney < type.getPrice()) {
             throw new TicketShortMoneyException("Short money: " + handedMoney);
         }
         --quantity;
         if (salesProceeds != null) {
-            salesProceeds = salesProceeds + passportPrice;
+            salesProceeds = salesProceeds + type.getPrice();
         } else {
-            salesProceeds = passportPrice;
+            salesProceeds = type.getPrice();
         }
-        return handedMoney - passportPrice;
+        //通常1日パスポートならパスポートを返却
+        Ticket ticket;
+        if (type == TicketType.ONEDAY) {
+            ticket = new OnedayTicket();
+        } else {
+            ticket = new DaysTicket(type);
+        }
+        return new TicketBuyResult(ticket, handedMoney - type.getPrice());
     }
 
     public static class TicketSoldOutException extends RuntimeException {

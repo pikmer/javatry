@@ -23,4 +23,6 @@ public interface Ticket {
     String getDisplayPrice();
 
     TicketType getType();
+
+    boolean isAlreadyIn();
 }
