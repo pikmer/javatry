@@ -1,5 +1,8 @@
 package org.docksidestage.bizfw.basic.buyticket;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author yama
  *
@@ -7,15 +10,19 @@ package org.docksidestage.bizfw.basic.buyticket;
 public class TicketProperty {
 
     //key-valueに帰る、TicketTypeファイル独立
-    private static final TicketProperty TICKET_PROPATEIS[] = { //チケットごとの情報格納
-            new TicketProperty(TicketType.ONEDAY, 7400, 1), //通常の1日チケット
-            new TicketProperty(TicketType.TWODAY, 13200, 2), //通常の2日チケット
-            new TicketProperty(TicketType.FOURDAY, 22400, 4), //通常の4日チケット
-    };
+    private static final Map<TicketType, TicketProperty> TicketProperties = new HashMap<>();
+    private static final TicketProperty TICKET_PROPATEIS[];
 
     private final int price;
     private final TicketType type;
     private final int entrancePossibleDays;
+
+    static {
+        for (TicketType ticketType : TicketType.values()) {
+            TicketProperty ticketProperty = new TicketProperty(ticketType, ticketType.getPrice(), ticketType.getDays());
+            TicketProperties.put(ticketType, ticketProperty);
+        }
+    }
 
     // ===================================================================================
     //                                                                         Constructor
@@ -35,7 +42,7 @@ public class TicketProperty {
                 return ticketProperty;
             }
         }
-        throw new IllegalStateException(type + "の値段はない！");
+        throw new IllegalStateException(type + "のチケットはない！");
     }
 
     // ===================================================================================
